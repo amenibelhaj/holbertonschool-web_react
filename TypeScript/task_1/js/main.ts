@@ -64,3 +64,48 @@ console.log(printTeacher("John", "Doe"));
 const appPrint = document.createElement("pre");
 appPrint.textContent = printTeacher("John", "Doe");
 document.body.appendChild(appPrint);
+
+// --------------------
+// Task 4: StudentClass
+// --------------------
+
+// Constructor interface
+interface StudentConstructor {
+  firstName: string;
+  lastName: string;
+}
+
+// Class interface
+interface StudentInterface {
+  workOnHomework(): string;
+  displayName(): string;
+}
+
+class StudentClass implements StudentInterface {
+  firstName: string;
+  lastName: string;
+
+  constructor({ firstName, lastName }: StudentConstructor) {
+    this.firstName = firstName;
+    this.lastName = lastName;
+  }
+
+  workOnHomework(): string {
+    return "Currently working";
+  }
+
+  displayName(): string {
+    return this.firstName;
+  }
+}
+
+// Test the class
+const student1 = new StudentClass({ firstName: "Alice", lastName: "Johnson" });
+
+console.log(student1.displayName());       // Alice
+console.log(student1.workOnHomework());    // Currently working
+
+// Optional: render student1 info on the page
+const appStudent = document.createElement("pre");
+appStudent.textContent = `Name: ${student1.displayName()}, Status: ${student1.workOnHomework()}`;
+document.body.appendChild(appStudent);
