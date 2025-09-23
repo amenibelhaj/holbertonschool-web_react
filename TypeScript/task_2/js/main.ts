@@ -1,22 +1,19 @@
 // --------------------
-// Task 5 & 6: Advanced Types & Employee functions
+// Task 5: Advanced Types
 // --------------------
 
-// Director interface
 interface DirectorInterface {
   workFromHome(): string;
   getCoffeeBreak(): string;
   workDirectorTasks(): string;
 }
 
-// Teacher interface
 interface TeacherInterface {
   workFromHome(): string;
   getCoffeeBreak(): string;
   workTeacherTasks(): string;
 }
 
-// Director class
 class Director implements DirectorInterface {
   workFromHome(): string {
     return "Working from home";
@@ -29,7 +26,6 @@ class Director implements DirectorInterface {
   }
 }
 
-// Teacher class
 class Teacher implements TeacherInterface {
   workFromHome(): string {
     return "Cannot work from home";
@@ -42,44 +38,55 @@ class Teacher implements TeacherInterface {
   }
 }
 
-// Create employee function
 function createEmployee(salary: number | string): Director | Teacher {
-  if (typeof salary === "number" && salary < 500) return new Teacher();
+  if (typeof salary === "number" && salary < 500) {
+    return new Teacher();
+  }
   return new Director();
 }
 
 // --------------------
-// Task 6: Functions for employees
+// Task 6: Type predicates + executeWork
 // --------------------
 
-// Type predicate to check if employee is Director
 function isDirector(employee: Director | Teacher): employee is Director {
   return employee instanceof Director;
 }
 
-// Execute work depending on employee type
-function executeWork(employee: Director | Teacher): void {
+function executeWork(employee: Director | Teacher): string {
   if (isDirector(employee)) {
-    console.log(employee.workDirectorTasks());
+    return employee.workDirectorTasks();
   } else {
-    console.log(employee.workTeacherTasks());
+    return employee.workTeacherTasks();
   }
 }
 
 // --------------------
-// Test examples
+// Task 7: String literal types
 // --------------------
-const emp1 = createEmployee(200);
-const emp2 = createEmployee(1000);
 
-executeWork(emp1);  // Output: Getting to work
-executeWork(emp2);  // Output: Getting to director tasks
+type Subjects = "Math" | "History";
 
-// Optional: render to the browser page
-[emp1, emp2].forEach(employee => {
-  const pre = document.createElement("pre");
-  pre.textContent = isDirector(employee)
-    ? employee.workDirectorTasks()
-    : employee.workTeacherTasks();
-  document.body.appendChild(pre);
-});
+function teachClass(todayClass: Subjects): string {
+  if (todayClass === "Math") {
+    return "Teaching Math";
+  }
+  return "Teaching History";
+}
+
+// --------------------
+// Tests
+// --------------------
+console.log(executeWork(createEmployee(200)));   // Getting to work
+console.log(executeWork(createEmployee(1000)));  // Getting to director tasks
+console.log(teachClass("Math"));                 // Teaching Math
+console.log(teachClass("History"));              // Teaching History
+
+const app = document.createElement("pre");
+app.textContent = [
+  executeWork(createEmployee(200)),
+  executeWork(createEmployee(1000)),
+  teachClass("Math"),
+  teachClass("History")
+].join("\n");
+document.body.appendChild(app);
