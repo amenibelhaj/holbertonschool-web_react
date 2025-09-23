@@ -1,5 +1,5 @@
 // --------------------
-// Task 5: Advanced Types
+// Task 5 & 6: Advanced Types & Employee functions
 // --------------------
 
 // Director interface
@@ -21,11 +21,9 @@ class Director implements DirectorInterface {
   workFromHome(): string {
     return "Working from home";
   }
-
   getCoffeeBreak(): string {
     return "Getting a coffee break";
   }
-
   workDirectorTasks(): string {
     return "Getting to director tasks";
   }
@@ -36,11 +34,9 @@ class Teacher implements TeacherInterface {
   workFromHome(): string {
     return "Cannot work from home";
   }
-
   getCoffeeBreak(): string {
     return "Cannot have a break";
   }
-
   workTeacherTasks(): string {
     return "Getting to work";
   }
@@ -48,28 +44,42 @@ class Teacher implements TeacherInterface {
 
 // Create employee function
 function createEmployee(salary: number | string): Director | Teacher {
-  if (typeof salary === "number" && salary < 500) {
-    return new Teacher();
-  }
+  if (typeof salary === "number" && salary < 500) return new Teacher();
   return new Director();
 }
-// Helper function to render text to the page
-function renderToPage(text: string) {
-  const pre = document.createElement("pre");
-  pre.textContent = text;
-  document.body.appendChild(pre);
+
+// --------------------
+// Task 6: Functions for employees
+// --------------------
+
+// Type predicate to check if employee is Director
+function isDirector(employee: Director | Teacher): employee is Director {
+  return employee instanceof Director;
 }
 
-// Test outputs
-const employee1 = createEmployee(200);   // Teacher
-const employee2 = createEmployee(1000);  // Director
-const employee3 = createEmployee("$500"); // Director
+// Execute work depending on employee type
+function executeWork(employee: Director | Teacher): void {
+  if (isDirector(employee)) {
+    console.log(employee.workDirectorTasks());
+  } else {
+    console.log(employee.workTeacherTasks());
+  }
+}
 
-renderToPage(`Employee 1: ${employee1.constructor.name}`);
-renderToPage(`Employee 2: ${employee2.constructor.name}`);
-renderToPage(`Employee 3: ${employee3.constructor.name}`);
+// --------------------
+// Test examples
+// --------------------
+const emp1 = createEmployee(200);
+const emp2 = createEmployee(1000);
 
-// Test outputs
-console.log(createEmployee(200));    // Teacher
-console.log(createEmployee(1000));   // Director
-console.log(createEmployee("$500")); // Director
+executeWork(emp1);  // Output: Getting to work
+executeWork(emp2);  // Output: Getting to director tasks
+
+// Optional: render to the browser page
+[emp1, emp2].forEach(employee => {
+  const pre = document.createElement("pre");
+  pre.textContent = isDirector(employee)
+    ? employee.workDirectorTasks()
+    : employee.workTeacherTasks();
+  document.body.appendChild(pre);
+});
